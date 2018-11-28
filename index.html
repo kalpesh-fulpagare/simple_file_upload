@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Sample File Upload</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+      .upload-form {
+        margin-top: 100px;
+        margin-left: 30px;
+      }
+      .upload-status {
+        font-size: 14px;
+        color: red;
+        font-weight: 400;
+        font-size: 1.25rem;
+        font-weight: 400;
+      }
+      .submit-button, .file-chooser {
+        padding: .5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: .3rem;
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .25rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      }
+      .file-chooser {
+        margin-bottom: 30px;
+      }
+      .submit-button {
+        display: block;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      .upload-progress {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+      <form class="upload-form"
+          enctype="multipart/form-data"
+          action="/file_upload"
+          method="post">
+          <input type="file" name="user_file" onchange="clearStatus()" class="file-chooser"/>
+          <input type="submit" value="Upload File" name="submit"
+                class="submit-button">
+          <div class="upload-status"></div>
+      </form>
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+
+  <script>
+    $('.upload-form').submit(function() {
+      if(!$('.file-chooser').val() || $('.file-chooser').val() == '') {
+        $(".upload-status").html("Select a file to upload");
+        return false;
+      }
+      $(".upload-status").html("File is getting uploaded......");
+      $(this).ajaxSubmit({
+        error: function(xhr) {
+          $(".upload-status").html('Error: ' + xhr.status);
+        },
+        uploadProgress: function(event, position, total, percentComplete) {
+          var percentVal = percentComplete + '% uploaded';
+          $(".upload-status").html(percentVal);
+        },
+        success: function(response) {
+  				$(".upload-status").html("<span class='upload-progress'>" + response + " </span>");
+        }
+      });
+     return false;
+    });
+
+    function clearStatus() {
+      $(".upload-status").html();
+    }
+  </script>
+</html>
+
